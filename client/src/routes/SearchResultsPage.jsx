@@ -1,4 +1,5 @@
 import React from "react"
+import SearchResultsList from "../components/SearchResultsList"
 
 
 
@@ -7,10 +8,12 @@ import React from "react"
 
 const SearchResultsPage = () => {
 
+
     return (
     
     <div>
         <h1>Search Results Page</h1>
+        <SearchResultsList />
     </div>
     )
 }

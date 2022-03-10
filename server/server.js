@@ -1,20 +1,35 @@
 require("dotenv").config();
 const express = require("express")
 const db = require('./db') //this should automatically look for index.js file
+const cors = require("cors")
 
 
 
 const app = express()
 
+app.use(cors())
 
 
-app.get("/api/v1/businesses", async (req, res) => {
+//get all businesses
+
+app.get("/api/v1/businesses/:query", async (req, res) => {
     
+console.log("Recieved")
+console.log(req.params.query)
+let searchQuery = `'%${req.params.query}%'`
+console.log(searchQuery)
+
+
+
+
 
 
     try {
 
-        const results = await db.query("SELECT * FROM businesses")
+        const results = await db.query("SELECT * FROM businesses WHERE name ILIKE $1", [`%${req.params.query}%`])
+
+
+        
 
         console.log(results)
         
