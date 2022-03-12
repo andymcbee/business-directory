@@ -5,7 +5,7 @@ import RestaurantFinder from "../apis/BusinessesAPI"
 
 
 
-function SearchBar(props) {
+function SearchBar({ data }) {
 
 
 
@@ -13,6 +13,8 @@ function SearchBar(props) {
   const {searchQuery, setSearchQuery} = useContext(BusinessesContext)
   const navigate = useNavigate()
   const {searchResults, setSearchResults} = useContext(BusinessesContext)
+  const [wordEntered, setWordEntered] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
 
 
@@ -79,6 +81,20 @@ function SearchBar(props) {
   let handleChange = (e) => {
     
     setSearchQuery(e.target.value)
+
+
+    const searchWord = e.target.value;
+    setWordEntered(searchWord);
+    const newFilter = data.filter((value) => { //remove I think... replace with API?
+      return value.title.toLowerCase().includes(searchWord.toLowerCase()); //remove I think... replace with API?   
+      // do an API call and then return the value of the results drilled into the data. Eg. response.data.data.name
+    } )
+
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }  
     
   }
 
@@ -99,9 +115,21 @@ function SearchBar(props) {
   }
   return (
     <div className="SearchBar">
-      <input value={searchQuery} placeholder="business name" onChange={(e)=>handleChange(e)}/>
-      <button onClick={()=>handleSubmit(searchQuery)}> Search</button>
-      
+      <div className="searchInputs">
+        <input value={searchQuery} placeholder="business name" onChange={(e)=>handleChange(e)}/>
+        <button onClick={()=>handleSubmit(searchQuery)}> Search</button>
+      </div>
+      {filteredData.length != 0 && (
+        <div className="dataResult">
+          {filteredData.slice(0, 15).map((value, key) => {
+            return (
+              <a className="dataItem" href={value.link} target="_blank">
+                <p>{value.title} </p>
+              </a>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
