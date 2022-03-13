@@ -1,0 +1,32 @@
+.SearchBar {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 100%;
+}
+
+.searchBox {
+    width: 300px;
+}
+
+.searchInputs {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+
+
+.suggestionContainer {
+    width: 300px;
+    background-color: white;
+}
+
+
+.suggestionItem {
+    padding: 0px;
+    margin: 0px;
+    border-bottom: 1px solid grey;
+    padding-left: 20px;
+    cursor: pointer;
+}

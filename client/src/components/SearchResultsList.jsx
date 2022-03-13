@@ -1,7 +1,7 @@
 import SearchBar from "./SearchBar"
-import react, { useContext, useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { BusinessesContext } from "../context/BusinessesContext"
-import RestaurantFinder from "../apis/BusinessesAPI"
+import "./SearchResultsList.css"
 
 
 
@@ -14,10 +14,6 @@ function SearchResultsList(props) {
 
 
 
-      
-
-  
-
 
 
 
@@ -25,8 +21,15 @@ function SearchResultsList(props) {
 
 
   return (
-    <div className="SearchBar">
-        <SearchBar />
+    <div className="SearchResultsList">
+        <div><SearchBar /></div>
+        <div>{searchResults && searchResults.map(result => {
+          return (
+            <div>{result.name}</div>
+          )
+        }
+
+        )}</div>
        
         
       
@@ -35,3 +38,5 @@ function SearchResultsList(props) {
 }
 
 export default SearchResultsList;
+
+//<a key={value.id} className="dataItem" onMouseDown={() => { handleSearchResultClick(value) }} target="_blank">

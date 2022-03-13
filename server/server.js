@@ -52,6 +52,41 @@ console.log(searchQuery)
 
 
 
+//get single business by ID
+
+app.get("/api/v1/businesses/view/:id", async (req, res) => {
+    
+    console.log("Recieved")
+    console.log(req.body)
+  
+    
+        try {
+    
+            const results = await db.query("SELECT * FROM businesses WHERE id = $1", [req.params.id])
+    
+    
+            
+    
+            console.log(results)
+            
+            res.status(200).json({
+    
+                status: "success",
+                results: results.rows.length,
+                data: {
+                    businesses: results.rows,
+                },
+    
+            })
+    
+        } catch (err) {
+            console.log(err)
+        }
+        
+    
+    })
+
+
 
 
 

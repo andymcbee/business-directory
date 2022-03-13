@@ -1,11 +1,12 @@
-import react, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { BusinessesContext } from "../context/BusinessesContext"
 import RestaurantFinder from "../apis/BusinessesAPI"
+import "./SearchBar.css"
 
 
 
-function SearchBar({ data }) {
+function SearchBar() {
 
 
 
@@ -15,6 +16,8 @@ function SearchBar({ data }) {
   const {searchResults, setSearchResults} = useContext(BusinessesContext)
   const [wordEntered, setWordEntered] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
+
 
 
 
@@ -27,7 +30,9 @@ function SearchBar({ data }) {
        
             
         console.log(response.data.data.restaurants)
-        setSearchResults(response.data.data.restaurants)
+       // setSearchResults(response.data.data.restaurants)
+       setFilteredData(response.data.data.restaurants)
+       setSearchResults(response.data.data.restaurants)
 
        
 
@@ -68,8 +73,15 @@ function SearchBar({ data }) {
       getData(searchValueFromUrl);
     }
 
+
     
   }, [])
+
+
+
+  
+
+
 
 
 
@@ -85,53 +97,72 @@ function SearchBar({ data }) {
 
     const searchWord = e.target.value;
     setWordEntered(searchWord);
-    const newFilter = data.filter((value) => { //remove I think... replace with API?
-      return value.title.toLowerCase().includes(searchWord.toLowerCase()); //remove I think... replace with API?   
-      // do an API call and then return the value of the results drilled into the data. Eg. response.data.data.name
-    } )
+   
+    
+    
 
     if (searchWord === "") {
       setFilteredData([]);
     } else {
-      setFilteredData(newFilter);
+      getData(searchWord)
+      
     }  
     
   }
+  
+  
+//navigate if search result is selected
+  let handleSearchResultClick = (business) => {
+    
+    console.log(business)
+    let test = 1
+    navigate(`/business/${business.id}`)
+
+//href={`/business/${value.id}`}
+  }
+
+  
 
 
-
-  let handleSubmit = (searchValue) => {
+  let handleSubmit = async (searchValue) => {
+    if ( searchValue === "") { return } else {
 
     var urlFriendlySearchValue = searchValue.split(' ').join('+');
     //console.log(replaced)
-    navigate(`/search?query=${urlFriendlySearchValue}`)
-
+    await getData(searchValue);
+     navigate(`/search?query=${urlFriendlySearchValue}`)
 
 
 
     
-
-    getData(searchValue);
-  }
+  }}
   return (
-    <div className="SearchBar">
+    <div className="SearchBar" onFocus={(e) => { setShowSearchSuggestions(true)}} onBlur={(e) => {setShowSearchSuggestions(false)}}>
       <div className="searchInputs">
-        <input value={searchQuery} placeholder="business name" onChange={(e)=>handleChange(e)}/>
-        <button onClick={()=>handleSubmit(searchQuery)}> Search</button>
-      </div>
-      {filteredData.length != 0 && (
-        <div className="dataResult">
-          {filteredData.slice(0, 15).map((value, key) => {
-            return (
-              <a className="dataItem" href={value.link} target="_blank">
-                <p>{value.title} </p>
-              </a>
-            );
-          })}
+        <div >
+          <input  className="searchBox" type="text" autoComplete="off" value={searchQuery}
+          placeholder="business name" onChange={(e)=>handleChange(e)}/> 
         </div>
-      )}
+       
+        <button className="searchButton" onClick={()=>handleSubmit(searchQuery)}> Search</button>
+      </div>
+      {showSearchSuggestions && <div className="suggestionContainer">
+        {filteredData.length != 0 && (
+          <div id="autocomplete-list" className="autocomplete-items">
+            {filteredData.slice(0, 15).map((value) => {
+              return (
+                <div className="suggestionItem">
+                    <a key={value.id} className="dataItem" onMouseDown={() => { handleSearchResultClick(value) }} target="_blank">
+                    <p>{value.name} </p>
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>}
     </div>
   );
-}
+}//href={`/business/${value.id}`}
 
 export default SearchBar;

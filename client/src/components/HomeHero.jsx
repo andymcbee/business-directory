@@ -1,11 +1,15 @@
 import SearchBar from "./SearchBar"
-import BookData from "../Data.json";
+import "./HomeHero.css"
+
 
 function Header() {
     return (
-      <div className="Header">
-        HERO IMAGE HERE...
-        <SearchBar data={BookData}/>
+      <div className="HomeHeroContainer">
+        <div>
+          <h1>Business Directory</h1>
+        </div>
+        <SearchBar/>
+
       </div>
     );
   }
